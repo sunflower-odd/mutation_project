@@ -3,6 +3,7 @@
 coverage.xml
 htmlcov/
 .mutmut-cache/
+.mutmut-cache
 .venv/
 venv/
 env/
