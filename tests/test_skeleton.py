@@ -213,8 +213,8 @@ class TestConvertCurrency:
 
 class TestParseIsoDate:
     def test_valid_full_datetime(self):
-        dt = parse_iso_date("2024-01-01T12:30:45")
-        assert dt.year == 2024
+        dt = parse_iso_date("2026-01-01T12:30:45")
+        assert dt.year == 2026
         assert dt.month == 1
         assert dt.day == 1
         assert dt.hour == 12
@@ -222,8 +222,8 @@ class TestParseIsoDate:
         assert dt.second == 45
 
     def test_valid_date_only(self):
-        dt = parse_iso_date("2024-12-25")
-        assert dt.year == 2024
+        dt = parse_iso_date("2026-12-25")
+        assert dt.year == 2026
         assert dt.month == 12
         assert dt.day == 25
         assert dt.hour == 0
@@ -294,7 +294,7 @@ class TestBulkDiscount:
 
 
 class TestComputeBulkTotal:
-    def test_no_discount_small_qty(self):
+    def test_no_discount(self):
         result = compute_bulk_total(10, 5)
         expected = price_with_tax(compute_subtotal(10, 5))
         assert result == expected
@@ -346,7 +346,7 @@ class TestValidateTaxNumber:
         assert validate_tax_number("LV1234567890") is True
         assert validate_tax_number("LV0000000000") is True
 
-    def test_invalid_prefix(self):
+    def test_invalid_start(self):
         assert validate_tax_number("US1234567890") is False
         assert validate_tax_number("Lv1234567890") is False
         assert validate_tax_number("1234567890") is False
@@ -382,7 +382,7 @@ class TestApplyDynamicTax:
         assert apply_dynamic_tax(0, "LV") == 0
         assert apply_dynamic_tax(0, "US") == 0
 
-    def test_empty_country_string(self):
+    def test_empty_country(self):
         assert apply_dynamic_tax(100, "") == 120.0
 
 
@@ -412,7 +412,7 @@ class TestApplyLoyaltyDiscount:
         assert apply_loyalty_discount(100, 0) == 100
         assert apply_loyalty_discount(100.50, 0) == 100.50
 
-    def test_with_points_1_cent_each(self):
+    def test_with_points_1_each(self):
         assert apply_loyalty_discount(100, 1) == 99.99
         assert apply_loyalty_discount(100, 50) == 99.50
         assert apply_loyalty_discount(100, 100) == 99.00
@@ -503,7 +503,7 @@ class TestEdgeCasesAndIntegration:
         assert _round(1.005) == 1.01
         assert _round(1.004999) == 1.0
 
-    def test_tax_rate_not_hardcoded_in_price_with_tax(self):
+    def test_tax_rate_not_hardcoded(self):
         original_rate = TAX_RATE
         try:
             import billing.calculator as calc
@@ -521,11 +521,11 @@ class TestEdgeCasesAndIntegration:
         finally:
             calc.BOOKING_FEE_PER_TICKET = original_fee
 
-    def test_coupon_dictionary_access(self):
+    def test_coupon_dictionary(self):
         assert apply_coupon(100, "some_coupon") == 100
         assert apply_coupon(100, "") == 100
 
-    def test_split_payment_rounding_accumulation(self):
+    def test_split_payment_rounding(self):
         for _ in range(100):
             total = 100.00
             parts = 7
